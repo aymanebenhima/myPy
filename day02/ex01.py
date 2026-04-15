@@ -49,3 +49,12 @@ class Bibliotheque:
         for media in self.contenu:
             print(media.afficher_infos())
 
+
+# --- Run ---
+lib = Bibliotheque()
+lib.ajouter(Livre("Clean Code", "Robert C. Martin", 431))
+lib.ajouter(Livre("The Pragmatic Programmer", "David Thomas", 352))
+lib.ajouter(DVD("Inception", "Christopher Nolan", 148))
+lib.ajouter(DVD("Interstellar", "Christopher Nolan", 169))
+
+lib.lister_tout()

@@ -1,0 +1,18 @@
+{
+    "ordinateur": {
+        "prix": 1200,
+        "quantite": 5
+    },
+    "souris": {
+        "prix": 150,
+        "quantite": 20
+    },
+    "clavier": {
+        "prix": 300,
+        "quantite": 10
+    },
+    "ecran": {
+        "prix": 800,
+        "quantite": 15
+    }
+}
