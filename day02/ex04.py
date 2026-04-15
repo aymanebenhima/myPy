@@ -1,5 +1,6 @@
 import json
 import os
+from pathlib import Path
 
 class Produit:
     def __init__(self, nom, prix, quantite):
@@ -21,6 +22,14 @@ class Produit:
 class GestionnaireStock:
     def __init__(self):
         self.inventaire: dict[str, Produit] = {}
+        self.safe_dir = Path.cwd() / "stock_data"
+        self.safe_dir.mkdir(exist_ok=True)
+
+    def _validate_path(self, fichier: str) -> Path:
+        safe_path = (self.safe_dir / fichier).resolve()
+        if not str(safe_path).startswith(str(self.safe_dir.resolve())):
+            raise ValueError(f"Invalid file path: {fichier}")
+        return safe_path
 
     def ajouter(self, produit: Produit):
         self.inventaire[produit.nom] = produit
@@ -41,15 +50,17 @@ class GestionnaireStock:
             print(f"  {produit}")
 
     def sauvegarder_stock(self, fichier: str):
-        with open(fichier, "w", encoding="utf-8") as f:
+        safe_path = self._validate_path(fichier)
+        with open(safe_path, "w", encoding="utf-8") as f:
             json.dump({nom: p.to_dict() for nom, p in self.inventaire.items()}, f, indent=4)
         print(f"[✔] Stock saved to '{fichier}'")
 
     def charger_stock(self, fichier: str):
-        if not os.path.exists(fichier):
+        safe_path = self._validate_path(fichier)
+        if not os.path.exists(safe_path):
             print(f"[ERROR] File '{fichier}' not found")
             return
-        with open(fichier, "r", encoding="utf-8") as f:
+        with open(safe_path, "r", encoding="utf-8") as f:
             data = json.load(f)
         self.inventaire = {nom: Produit.from_dict(p) for nom, p in data.items()}
         print(f"[✔] Stock loaded from '{fichier}'")
